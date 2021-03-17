@@ -1,0 +1,107 @@
+html, body{
+    margin: 0;
+    padding: 0;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 120px 1fr 40px;
+    grid-template-rows: 80px .85fr 68px 120px;
+    width: 550px;
+    height: 610px;
+    grid-template-areas: 
+    "... header ..."
+    "... form ..."
+    "chosenHome chosenHome chosenHome"
+    "buttons buttons buttons";
+    border: 2px solid black;
+    align-content: center;
+    margin: 5px auto 0 auto;
+}
+.grid-container>header {
+    grid-area: header;
+}
+ header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: .75em;
+} 
+h1 {
+    margin: 10px;
+    font-weight: normal;
+}
+.grid-container>section.inputArea {
+    grid-area: form;
+}
+fieldset {
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+fieldset>div {
+    margin: 15px 0;
+    width: 1fr;
+}
+fieldset>div>label {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: right;
+    width: 400px;
+    line-height: 26px;
+    margin-bottom: 10px;
+} 
+ input {
+    width: 250px;
+    height: 20px;
+    flex: 0 0 250px;
+    margin-left: 10px;
+} 
+.grid-container>div.chosenHome {
+    grid-area: chosenHome;
+    margin: 0 20px 0 40px;
+    display: inline-flex;
+}
+.grid-container>div.chosenHome>label {
+    margin: 13px 0 0 0;
+}
+.grid-container>div.buttons {
+    grid-area: buttons;
+}
+#dream {
+    margin: 0 35px 0 65px;
+    width: 205px;
+    height: 40px;
+}
+#notDream {
+    margin: 0 15px 0 0px;
+    height: 40px;
+}
+#reset {
+    margin: 20px 130px 20px 186px;
+    width: 205px;
+    height: 40px;
+}
+.buttons>* {
+    border: 1px solid black;
+    background-color: white;
+    box-shadow: 1px 2px gray;
+}
+#output {
+    border: 2px solid #3f3f3f;
+    box-shadow: 0px 1px gray;
+    width: 360px;
+    height: 45px;
+    margin: 0 0 0 30px;
+    text-align: center;
+}
+/* #chosenHome {
+    grid-row: 3;
+} */
+/* #buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+} */

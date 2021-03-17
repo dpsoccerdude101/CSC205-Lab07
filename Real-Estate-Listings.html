@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Real Estate Listings</title>
+    <link rel="stylesheet" href="Real-Estate-Listings.css" />
+  </head>
+  <body>
+    <div class="grid-container">
+      <header class="header">
+        <h1>Real Estate Listings</h1>
+      </header>
+      <section class="inputArea">
+        <form action="" id="RealEstateForm" onsubmit="event.preventDefault();validateForm(); "> 
+          <fieldset>
+            <div>
+              <label for=""
+                >Minimum Price<input type="number" name="minPrice" id=""
+              /></label>
+            </div>
+            <div>
+              <label for=""
+                >Maximum Price<input type="number" name="maxPrice" id=""
+              /></label>
+            </div>
+            <div>
+              <label for=""
+                >Minimum Area<input type="number" name="minArea" id=""
+              /></label>
+            </div>
+            <div>
+              <label for=""
+                >Maximum Area<input type="number" name="maxArea" id=""
+              /></label>
+            </div>
+            <div>
+              <label for=""
+                >Minimum Beds<input type="number" name="minBeds" id=""
+              /></label>
+            </div>
+            <div>
+              <label for=""
+                >Maximum Beds<input type="number" name="maxBeds" id=""
+              /></label>
+            </div>
+          </fieldset>
+        </form>
+      </section>
+      <div class="chosenHome">
+        <label for="">Chosen Home</label>
+        <div id="output"></div>
+      </div>
+      <div class="buttons">
+        <button type="submit" form="RealEstateForm" id="dream" onclick="remove()">
+          Find my dream house!
+        </button>
+        <button disabled="disabled" id="notDream" form="RealEstateForm">
+          Not my dream - find me another!
+        </button>
+        <!-- DONT FORGET TO REMOVE DISABLED ATTRIBUTE ON FIND ANOTHER HOME BUTTON -->
+        <button type="reset" id="reset" form="RealEstateForm">Reset</button>
+      </div>
+    </div>
+  </body>
+<script src="Real-Estate-Listings.js"></script>
+
+
+
+
+
+</html>

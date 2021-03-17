@@ -1,0 +1,158 @@
+<html>
+<head>
+<title>Main.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #000080; font-weight: bold;}
+.s1 { color: #000000;}
+.s2 { color: #808080; font-style: italic;}
+.s3 { color: #008000; font-weight: bold;}
+.s4 { color: #0000ff;}
+.s5 { color: #808080; font-weight: bold; font-style: italic;}
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Main.java</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span>InvoicePackage;
+<a name="l2"><span class="ln">2    </span></a>
+<a name="l3"><span class="ln">3    </span></a><span class="s0">import </span>javafx.application.Application;
+<a name="l4"><span class="ln">4    </span></a><span class="s0">import </span>javafx.concurrent.Worker;
+<a name="l5"><span class="ln">5    </span></a><span class="s0">import </span>javafx.concurrent.Worker.State;
+<a name="l6"><span class="ln">6    </span></a><span class="s0">import </span>javafx.geometry.Insets;
+<a name="l7"><span class="ln">7    </span></a><span class="s0">import </span>javafx.scene.Scene;
+<a name="l8"><span class="ln">8    </span></a><span class="s0">import </span>javafx.scene.layout.StackPane;
+<a name="l9"><span class="ln">9    </span></a><span class="s0">import </span>javafx.scene.web.WebEngine;
+<a name="l10"><span class="ln">10   </span></a><span class="s0">import </span>javafx.scene.web.WebView;
+<a name="l11"><span class="ln">11   </span></a><span class="s0">import </span>javafx.stage.Stage;
+<a name="l12"><span class="ln">12   </span></a><span class="s0">import </span>netscape.javascript.JSObject;
+<a name="l13"><span class="ln">13   </span></a><span class="s0">import </span>org.w3c.dom.Document;
+<a name="l14"><span class="ln">14   </span></a><span class="s0">import </span>org.w3c.dom.Element;
+<a name="l15"><span class="ln">15   </span></a><span class="s0">import </span>org.w3c.dom.events.EventListener;
+<a name="l16"><span class="ln">16   </span></a><span class="s0">import </span>org.w3c.dom.events.EventTarget;
+<a name="l17"><span class="ln">17   </span></a>
+<a name="l18"><span class="ln">18   </span></a><span class="s0">import </span>java.net.MalformedURLException;
+<a name="l19"><span class="ln">19   </span></a><span class="s0">import </span>java.net.URL;
+<a name="l20"><span class="ln">20   </span></a><span class="s0">import </span>java.util.ArrayList;
+<a name="l21"><span class="ln">21   </span></a>
+<a name="l22"><span class="ln">22   </span></a><span class="s0">public class </span>Main <span class="s0">extends </span>Application {
+<a name="l23"><span class="ln">23   </span></a>    <span class="s2">// for communication to the Javascript engine.</span>
+<a name="l24"><span class="ln">24   </span></a>    <span class="s0">private </span>JSObject javascriptConnector;
+<a name="l25"><span class="ln">25   </span></a>
+<a name="l26"><span class="ln">26   </span></a>    <span class="s0">private </span>HouseList houseList = <span class="s0">new </span>HouseList(<span class="s3">&quot;C:</span><span class="s0">\\</span><span class="s3">Users</span><span class="s0">\\</span><span class="s3">denni</span><span class="s0">\\</span><span class="s3">eclipse-workspace</span><span class="s0">\\</span><span class="s3">Project01</span><span class="s0">\\</span><span class="s3">src</span><span class="s0">\\</span><span class="s3">project01</span><span class="s0">\\</span><span class="s3">houses.txt&quot;</span>);
+<a name="l27"><span class="ln">27   </span></a>
+<a name="l28"><span class="ln">28   </span></a>    <span class="s0">private </span>ArrayList&lt;House&gt; matchedHouses = <span class="s0">new </span>ArrayList&lt;House&gt;();
+<a name="l29"><span class="ln">29   </span></a>    <span class="s0">private </span>Criteria criteriaObject;
+<a name="l30"><span class="ln">30   </span></a>    <span class="s2">// for communication from the Javascript engine. //</span>
+<a name="l31"><span class="ln">31   </span></a>    <span class="s0">private </span>JavaConnector javaConnector = <span class="s0">new </span>JavaConnector();
+<a name="l32"><span class="ln">32   </span></a>    <span class="s0">public static void </span>main(String[] args) {
+<a name="l33"><span class="ln">33   </span></a>        launch(args);
+<a name="l34"><span class="ln">34   </span></a>    }
+<a name="l35"><span class="ln">35   </span></a>
+<a name="l36"><span class="ln">36   </span></a>    @Override
+<a name="l37"><span class="ln">37   </span></a>    <span class="s0">public void </span>start(Stage primaryStage) {
+<a name="l38"><span class="ln">38   </span></a>        primaryStage.setTitle(<span class="s3">&quot;Real Estate Listings&quot;</span>);
+<a name="l39"><span class="ln">39   </span></a>        StackPane pane = <span class="s0">new </span>StackPane ();
+<a name="l40"><span class="ln">40   </span></a>        pane.setPadding(<span class="s0">new </span>Insets(<span class="s4">15</span>, <span class="s4">5</span>, <span class="s4">5</span>, <span class="s4">5</span>));
+<a name="l41"><span class="ln">41   </span></a>
+<a name="l42"><span class="ln">42   </span></a>        <span class="s0">final </span>WebView browser = <span class="s0">new </span>WebView();
+<a name="l43"><span class="ln">43   </span></a>        <span class="s2">// final WebEngine webEngine = browser.getEngine();</span>
+<a name="l44"><span class="ln">44   </span></a>        WebEngine webEngine = browser.getEngine();
+<a name="l45"><span class="ln">45   </span></a>
+<a name="l46"><span class="ln">46   </span></a>        URL url = <span class="s0">null</span>;
+<a name="l47"><span class="ln">47   </span></a>        <span class="s0">try </span>{
+<a name="l48"><span class="ln">48   </span></a>            url = <span class="s0">new </span>URL(<span class="s3">&quot;https://dpsoccerdude101.github.io/dpsoccerdude101.github.io/Project2%20Intellij/Real-Estate-Listings.html&quot;</span>);
+<a name="l49"><span class="ln">49   </span></a>            System.out.print(url.toExternalForm());
+<a name="l50"><span class="ln">50   </span></a>            webEngine.load(url.toExternalForm());
+<a name="l51"><span class="ln">51   </span></a>        } <span class="s0">catch </span>(MalformedURLException e) {
+<a name="l52"><span class="ln">52   </span></a>            <span class="s2">// TODO Auto-generated catch block</span>
+<a name="l53"><span class="ln">53   </span></a>            e.printStackTrace();
+<a name="l54"><span class="ln">54   </span></a>            webEngine.loadContent(<span class="s3">&quot;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;There's a bloody error.&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span>);
+<a name="l55"><span class="ln">55   </span></a>        }
+<a name="l56"><span class="ln">56   </span></a>        webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -&gt; {
+<a name="l57"><span class="ln">57   </span></a>            <span class="s0">if </span>(Worker.State.SUCCEEDED == newValue) {
+<a name="l58"><span class="ln">58   </span></a>                <span class="s2">// set an interface object named 'javaConnector' in the web engine's page</span>
+<a name="l59"><span class="ln">59   </span></a>                JSObject window = (JSObject) webEngine.executeScript(<span class="s3">&quot;window&quot;</span>);
+<a name="l60"><span class="ln">60   </span></a>                window.setMember(<span class="s3">&quot;javaConnector&quot;</span>, javaConnector);
+<a name="l61"><span class="ln">61   </span></a>
+<a name="l62"><span class="ln">62   </span></a>                <span class="s2">// get the Javascript connector object.</span>
+<a name="l63"><span class="ln">63   </span></a>                javascriptConnector = (JSObject) webEngine.executeScript(<span class="s3">&quot;getJsConnector()&quot;</span>);
+<a name="l64"><span class="ln">64   </span></a>            }
+<a name="l65"><span class="ln">65   </span></a>        });
+<a name="l66"><span class="ln">66   </span></a>
+<a name="l67"><span class="ln">67   </span></a>
+<a name="l68"><span class="ln">68   </span></a>        pane.getChildren().add(browser);
+<a name="l69"><span class="ln">69   </span></a>        pane.setPrefWidth(<span class="s4">550</span>);
+<a name="l70"><span class="ln">70   </span></a>        pane.setPrefHeight(<span class="s4">610</span>);
+<a name="l71"><span class="ln">71   </span></a>        <span class="s2">//200, 250</span>
+<a name="l72"><span class="ln">72   </span></a>        Scene scene = <span class="s0">new </span>Scene(pane, <span class="s4">600</span>, <span class="s4">650</span>);
+<a name="l73"><span class="ln">73   </span></a>        primaryStage.setScene(scene);
+<a name="l74"><span class="ln">74   </span></a>
+<a name="l75"><span class="ln">75   </span></a>        primaryStage.show();
+<a name="l76"><span class="ln">76   </span></a>
+<a name="l77"><span class="ln">77   </span></a>       webEngine.getLoadWorker().stateProperty().addListener((ov, oldState, newState) -&gt; {
+<a name="l78"><span class="ln">78   </span></a>            <span class="s0">if </span>(newState == State.SUCCEEDED) {
+<a name="l79"><span class="ln">79   </span></a>                EventListener listener = <span class="s0">new </span>EventListener() {
+<a name="l80"><span class="ln">80   </span></a>                    @Override
+<a name="l81"><span class="ln">81   </span></a>                    <span class="s0">public void </span>handleEvent(org.w3c.dom.events.Event ev) {
+<a name="l82"><span class="ln">82   </span></a>                        matchedHouses.clear();
+<a name="l83"><span class="ln">83   </span></a>                    }
+<a name="l84"><span class="ln">84   </span></a>                };
+<a name="l85"><span class="ln">85   </span></a>                Document doc = webEngine.getDocument();
+<a name="l86"><span class="ln">86   </span></a>                Element reset = doc.getElementById(<span class="s3">&quot;reset&quot;</span>);
+<a name="l87"><span class="ln">87   </span></a>                ((EventTarget) reset).addEventListener(<span class="s3">&quot;click&quot;</span>, listener, <span class="s0">false</span>);
+<a name="l88"><span class="ln">88   </span></a>            }
+<a name="l89"><span class="ln">89   </span></a>        });
+<a name="l90"><span class="ln">90   </span></a>        <span class="s2">// set up the listener</span>
+<a name="l91"><span class="ln">91   </span></a>
+<a name="l92"><span class="ln">92   </span></a>    }
+<a name="l93"><span class="ln">93   </span></a>    <span class="s0">public class </span>JavaConnector {
+<a name="l94"><span class="ln">94   </span></a>
+<a name="l95"><span class="ln">95   </span></a>        <span class="s0">private </span>String value;
+<a name="l96"><span class="ln">96   </span></a>        <span class="s2">/**</span>
+<a name="l97"><span class="ln">97   </span></a>         <span class="s2">* called when the JS side wants a String to be converted.</span>
+<a name="l98"><span class="ln">98   </span></a>         <span class="s2">*</span>
+<a name="l99"><span class="ln">99   </span></a>         <span class="s2">* </span><span class="s5">@param </span><span class="s2">value</span>
+<a name="l100"><span class="ln">100  </span></a>         <span class="s2">*         the String to convert</span>
+<a name="l101"><span class="ln">101  </span></a>         <span class="s2">*/</span>
+<a name="l102"><span class="ln">102  </span></a>        <span class="s0">public void </span>toJava(String value) {
+<a name="l103"><span class="ln">103  </span></a>            <span class="s0">this</span>.value = value;
+<a name="l104"><span class="ln">104  </span></a>            String[] tokens = value.split(<span class="s3">&quot;&amp;&quot;</span>);
+<a name="l105"><span class="ln">105  </span></a>            Integer[] tokensInt = <span class="s0">new </span>Integer[tokens.length];
+<a name="l106"><span class="ln">106  </span></a>            <span class="s0">for </span>(<span class="s0">int </span>count = <span class="s4">0</span>; count &lt; tokens.length; count++) {
+<a name="l107"><span class="ln">107  </span></a>                String[] miniTokens = tokens[count].split(<span class="s3">&quot;=&quot;</span>);
+<a name="l108"><span class="ln">108  </span></a>                tokensInt[count] = Integer.parseInt(miniTokens[<span class="s4">1</span>]);
+<a name="l109"><span class="ln">109  </span></a>            }
+<a name="l110"><span class="ln">110  </span></a>            criteriaObject = <span class="s0">new </span>Criteria(tokensInt[<span class="s4">0</span>], tokensInt[<span class="s4">1</span>], tokensInt[<span class="s4">2</span>], tokensInt[<span class="s4">3</span>], tokensInt[<span class="s4">4</span>], tokensInt[<span class="s4">5</span>]);
+<a name="l111"><span class="ln">111  </span></a>
+<a name="l112"><span class="ln">112  </span></a>            <span class="s2">//this sets the matchedHouses List</span>
+<a name="l113"><span class="ln">113  </span></a>            <span class="s0">if </span>(matchedHouses.isEmpty()) {
+<a name="l114"><span class="ln">114  </span></a>                matchedHouses = houseList.getHouses(criteriaObject);
+<a name="l115"><span class="ln">115  </span></a>            }
+<a name="l116"><span class="ln">116  </span></a>            <span class="s2">//if the criteria did not match with anything then it will trigger &quot;No houses left to display&quot;</span>
+<a name="l117"><span class="ln">117  </span></a>            <span class="s0">if </span>(matchedHouses.isEmpty())
+<a name="l118"><span class="ln">118  </span></a>                matchedHouses.add(<span class="s0">new </span>House(<span class="s3">&quot;1&quot;</span>, <span class="s4">0</span>, <span class="s4">0</span>, <span class="s4">0</span>));
+<a name="l119"><span class="ln">119  </span></a>            House randomHouse = houseList.getRandom(matchedHouses);
+<a name="l120"><span class="ln">120  </span></a>            String randomHouseAddress;
+<a name="l121"><span class="ln">121  </span></a>            <span class="s0">if </span>(randomHouse.getAddress().equals(<span class="s3">&quot;1&quot;</span>))
+<a name="l122"><span class="ln">122  </span></a>                randomHouseAddress = (<span class="s3">&quot;No houses left to display&quot;</span>);
+<a name="l123"><span class="ln">123  </span></a>            <span class="s0">else</span>
+<a name="l124"><span class="ln">124  </span></a>                randomHouseAddress = randomHouse.getAddress();
+<a name="l125"><span class="ln">125  </span></a>
+<a name="l126"><span class="ln">126  </span></a>            matchedHouses.remove(randomHouse);
+<a name="l127"><span class="ln">127  </span></a>            <span class="s0">if </span>(matchedHouses.isEmpty()) {
+<a name="l128"><span class="ln">128  </span></a>                matchedHouses.add(<span class="s0">new </span>House(<span class="s3">&quot;0&quot;</span>, <span class="s4">0</span>, <span class="s4">0</span>, <span class="s4">0</span>));
+<a name="l129"><span class="ln">129  </span></a>            }
+<a name="l130"><span class="ln">130  </span></a>            <span class="s0">if </span>(<span class="s0">this</span>.value != <span class="s0">null</span>) {
+<a name="l131"><span class="ln">131  </span></a>                javascriptConnector.call(<span class="s3">&quot;showResult&quot;</span>, randomHouseAddress);
+<a name="l132"><span class="ln">132  </span></a>            }
+<a name="l133"><span class="ln">133  </span></a>        }
+<a name="l134"><span class="ln">134  </span></a>    }
+<a name="l135"><span class="ln">135  </span></a>}
+<a name="l136"><span class="ln">136  </span></a></pre>
+</body>
+</html>
